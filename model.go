@@ -2,18 +2,21 @@ package model
 
 import "time"
 
+type FilterCriteria struct {
+	Field       string   `json:"field"`
+	Operator    string   `json:"operator"`
+	SecondValue string   `json:"secondValue,omitempty"`
+	Value       string   `json:"value,omitempty"`
+	Values      []string `json:"values,omitempty"`
+}
+type SortingCriteria struct {
+	Field string `json:"field,omitempty"`
+	Order string `json:"order,omitempty"`
+}
+
 type LoanSearchRequest struct {
-	FilterCriteria []struct {
-		Field       string   `json:"field"`
-		Operator    string   `json:"operator"`
-		SecondValue string   `json:"secondValue,omitempty"`
-		Value       string   `json:"valu,omitempty"`
-		Values      []string `json:"values,omitempty"`
-	} `json:"filterCriteria"`
-	SortingCriteria struct {
-		Field string `json:"field"`
-		Order string `json:"order"`
-	} `json:"sortingCriteria,omitempty"`
+	FilterCriteria  []FilterCriteria `json:"filterCriteria"`
+	SortingCriteria SortingCriteria  `json:"sortingCriteria,omitempty"`
 }
 
 type LoanSearchResponse []struct {
@@ -122,7 +125,7 @@ type LoanSearchResponse []struct {
 		GuarantorType     string  `json:"guarantorType"`
 	} `json:"guarantors"`
 	ID                            string  `json:"id"`
-	InterestAccruedInBillingCycle float64 `json:"interestAccruedInBillingCycle"`
+	InterestAccruedInBillingCycle int     `json:"interestAccruedInBillingCycle"`
 	InterestCommission            float64 `json:"interestCommission"`
 	InterestFromArrearsAccrued    float64 `json:"interestFromArrearsAccrued"`
 	InterestSettings              struct {
@@ -132,7 +135,7 @@ type LoanSearchResponse []struct {
 			InterestRate             float64   `json:"interestRate"`
 			InterestRateCeilingValue float64   `json:"interestRateCeilingValue"`
 			InterestRateFloorValue   float64   `json:"interestRateFloorValue"`
-			InterestRateReviewCount  float64   `json:"interestRateReviewCount"`
+			InterestRateReviewCount  int       `json:"interestRateReviewCount"`
 			InterestRateReviewUnit   string    `json:"interestRateReviewUnit"`
 			InterestRateSource       string    `json:"interestRateSource"`
 			InterestSpread           float64   `json:"interestSpread"`
@@ -145,7 +148,7 @@ type LoanSearchResponse []struct {
 		InterestCalculationMethod        string  `json:"interestCalculationMethod"`
 		InterestChargeFrequency          string  `json:"interestChargeFrequency"`
 		InterestRate                     float64 `json:"interestRate"`
-		InterestRateReviewCount          float64 `json:"interestRateReviewCount"`
+		InterestRateReviewCount          int     `json:"interestRateReviewCount"`
 		InterestRateReviewUnit           string  `json:"interestRateReviewUnit"`
 		InterestRateSource               string  `json:"interestRateSource"`
 		InterestSpread                   float64 `json:"interestSpread"`
@@ -363,4 +366,316 @@ type GroupResponse struct {
 	MobilePhone       string    `json:"mobilePhone"`
 	Notes             string    `json:"notes"`
 	PreferredLanguage string    `json:"preferredLanguage"`
+}
+
+type LoanProductResponse struct {
+	AccountLinkSettings struct {
+		Enabled                   bool     `json:"enabled"`
+		LinkableDepositProductKey string   `json:"linkableDepositProductKey"`
+		LinkedAccountOptions      []string `json:"linkedAccountOptions"`
+		SettlementMethod          string   `json:"settlementMethod"`
+	} `json:"accountLinkSettings"`
+	AccountingSettings struct {
+		AccountingMethod string `json:"accountingMethod"`
+		AccountingRules  []struct {
+			EncodedKey            string `json:"encodedKey"`
+			FinancialResource     string `json:"financialResource"`
+			GlAccountKey          string `json:"glAccountKey"`
+			TransactionChannelKey string `json:"transactionChannelKey"`
+		} `json:"accountingRules"`
+		InterestAccrualCalculation      string `json:"interestAccrualCalculation"`
+		InterestAccruedAccountingMethod string `json:"interestAccruedAccountingMethod"`
+	} `json:"accountingSettings"`
+	AdjustInterestForFirstInstallment bool `json:"adjustInterestForFirstInstallment"`
+	AllowCustomRepaymentAllocation    bool `json:"allowCustomRepaymentAllocation"`
+	ArrearsSettings                   struct {
+		DateCalculationMethod                     string `json:"dateCalculationMethod"`
+		EncodedKey                                string `json:"encodedKey"`
+		MonthlyToleranceDay                       int    `json:"monthlyToleranceDay"`
+		NonWorkingDaysMethod                      string `json:"nonWorkingDaysMethod"`
+		ToleranceCalculationMethod                string `json:"toleranceCalculationMethod"`
+		ToleranceFloorAmount                      int    `json:"toleranceFloorAmount"`
+		TolerancePercentageOfOutstandingPrincipal struct {
+			DefaultValue float64 `json:"defaultValue"`
+			MaxValue     float64 `json:"maxValue"`
+			MinValue     float64 `json:"minValue"`
+		} `json:"tolerancePercentageOfOutstandingPrincipal"`
+		TolerancePeriod struct {
+			DefaultValue int    `json:"defaultValue"`
+			EncodedKey   string `json:"encodedKey"`
+			MaxValue     int    `json:"maxValue"`
+			MinValue     int    `json:"minValue"`
+		} `json:"tolerancePeriod"`
+	} `json:"arrearsSettings"`
+	AvailabilitySettings struct {
+		AvailableFor   []string `json:"availableFor"`
+		BranchSettings struct {
+			AvailableProductBranches []string `json:"availableProductBranches"`
+			ForAllBranches           bool     `json:"forAllBranches"`
+		} `json:"branchSettings"`
+	} `json:"availabilitySettings"`
+	Category                  string    `json:"category"`
+	CreationDate              time.Time `json:"creationDate"`
+	CreditArrangementSettings struct {
+		CreditArrangementRequirement string `json:"creditArrangementRequirement"`
+	} `json:"creditArrangementSettings"`
+	Currency struct {
+		Code         string `json:"code"`
+		CurrencyCode string `json:"currencyCode"`
+	} `json:"currency"`
+	EncodedKey   string `json:"encodedKey"`
+	FeesSettings struct {
+		AllowArbitraryFees bool `json:"allowArbitraryFees"`
+		Fees               []struct {
+			AccountingRules []struct {
+				EncodedKey            string `json:"encodedKey"`
+				FinancialResource     string `json:"financialResource"`
+				GlAccountKey          string `json:"glAccountKey"`
+				TransactionChannelKey string `json:"transactionChannelKey"`
+			} `json:"accountingRules"`
+			AmortizationSettings struct {
+				AmortizationProfile                          string `json:"amortizationProfile"`
+				EncodedKey                                   string `json:"encodedKey"`
+				FeeAmortizationUponRescheduleRefinanceOption string `json:"feeAmortizationUponRescheduleRefinanceOption"`
+				Frequency                                    string `json:"frequency"`
+				IntervalCount                                int    `json:"intervalCount"`
+				IntervalType                                 string `json:"intervalType"`
+				PeriodCount                                  int    `json:"periodCount"`
+				PeriodUnit                                   string `json:"periodUnit"`
+			} `json:"amortizationSettings"`
+			Amount                  float64   `json:"amount"`
+			AmountCalculationMethod string    `json:"amountCalculationMethod"`
+			ApplyDateMethod         string    `json:"applyDateMethod"`
+			CreationDate            time.Time `json:"creationDate"`
+			EncodedKey              string    `json:"encodedKey"`
+			FeeApplication          string    `json:"feeApplication"`
+			ID                      string    `json:"id"`
+			LastModifiedDate        time.Time `json:"lastModifiedDate"`
+			Name                    string    `json:"name"`
+			PercentageAmount        float64   `json:"percentageAmount"`
+			State                   string    `json:"state"`
+			TaxSettings             struct {
+				TaxableCalculationMethod string `json:"taxableCalculationMethod"`
+			} `json:"taxSettings"`
+			Trigger string `json:"trigger"`
+		} `json:"fees"`
+	} `json:"feesSettings"`
+	FundingSettings struct {
+		Enabled                  bool `json:"enabled"`
+		FunderInterestCommission struct {
+			DefaultValue float64 `json:"defaultValue"`
+			EncodedKey   string  `json:"encodedKey"`
+			MaxValue     float64 `json:"maxValue"`
+			MinValue     float64 `json:"minValue"`
+		} `json:"funderInterestCommission"`
+		FunderInterestCommissionAllocationType string `json:"funderInterestCommissionAllocationType"`
+		LockFundsAtApproval                    bool   `json:"lockFundsAtApproval"`
+		OrganizationInterestCommission         struct {
+			DefaultValue float64 `json:"defaultValue"`
+			EncodedKey   string  `json:"encodedKey"`
+			MaxValue     float64 `json:"maxValue"`
+			MinValue     float64 `json:"minValue"`
+		} `json:"organizationInterestCommission"`
+		RequiredFunds float64 `json:"requiredFunds"`
+	} `json:"fundingSettings"`
+	GracePeriodSettings struct {
+		GracePeriod struct {
+			DefaultValue int    `json:"defaultValue"`
+			EncodedKey   string `json:"encodedKey"`
+			MaxValue     int    `json:"maxValue"`
+			MinValue     int    `json:"minValue"`
+		} `json:"gracePeriod"`
+		GracePeriodType string `json:"gracePeriodType"`
+	} `json:"gracePeriodSettings"`
+	ID               string `json:"id"`
+	InterestSettings struct {
+		AccrueLateInterest   bool   `json:"accrueLateInterest"`
+		CompoundingFrequency string `json:"compoundingFrequency"`
+		DaysInYear           string `json:"daysInYear"`
+		IndexRateSettings    struct {
+			AccrueInterestAfterMaturity  bool   `json:"accrueInterestAfterMaturity"`
+			AllowNegativeInterestRate    bool   `json:"allowNegativeInterestRate"`
+			EncodedKey                   string `json:"encodedKey"`
+			IndexSourceKey               string `json:"indexSourceKey"`
+			InterestChargeFrequency      string `json:"interestChargeFrequency"`
+			InterestChargeFrequencyCount int    `json:"interestChargeFrequencyCount"`
+			InterestRate                 struct {
+				DefaultValue float64 `json:"defaultValue"`
+				MaxValue     float64 `json:"maxValue"`
+				MinValue     float64 `json:"minValue"`
+			} `json:"interestRate"`
+			InterestRateCeilingValue float64 `json:"interestRateCeilingValue"`
+			InterestRateFloorValue   float64 `json:"interestRateFloorValue"`
+			InterestRateReviewCount  float64 `json:"interestRateReviewCount"`
+			InterestRateReviewUnit   string  `json:"interestRateReviewUnit"`
+			InterestRateSource       string  `json:"interestRateSource"`
+			InterestRateTerms        string  `json:"interestRateTerms"`
+			InterestRateTiers        []struct {
+				EncodedKey    string  `json:"encodedKey"`
+				EndingBalance float64 `json:"endingBalance"`
+				InterestRate  float64 `json:"interestRate"`
+			} `json:"interestRateTiers"`
+		} `json:"indexRateSettings"`
+		InterestApplicationMethod        string `json:"interestApplicationMethod"`
+		InterestBalanceCalculationMethod string `json:"interestBalanceCalculationMethod"`
+		InterestCalculationMethod        string `json:"interestCalculationMethod"`
+		InterestRateSettings             []struct {
+			EncodedKey     string `json:"encodedKey"`
+			IndexSourceKey string `json:"indexSourceKey"`
+			InterestRate   struct {
+				DefaultValue float64 `json:"defaultValue"`
+				MaxValue     float64 `json:"maxValue"`
+				MinValue     float64 `json:"minValue"`
+			} `json:"interestRate"`
+			InterestRateCeilingValue float64 `json:"interestRateCeilingValue"`
+			InterestRateFloorValue   float64 `json:"interestRateFloorValue"`
+			InterestRateReviewCount  int     `json:"interestRateReviewCount"`
+			InterestRateReviewUnit   string  `json:"interestRateReviewUnit"`
+			InterestRateSource       string  `json:"interestRateSource"`
+		} `json:"interestRateSettings"`
+		InterestType                    string `json:"interestType"`
+		ScheduleInterestDaysCountMethod string `json:"scheduleInterestDaysCountMethod"`
+	} `json:"interestSettings"`
+	InternalControls struct {
+		DormancyPeriodDays int `json:"dormancyPeriodDays"`
+		FourEyesPrinciple  struct {
+			ActiveForLoanApproval bool `json:"activeForLoanApproval"`
+		} `json:"fourEyesPrinciple"`
+		LockSettings struct {
+			CappingConstraintType string  `json:"cappingConstraintType"`
+			CappingMethod         string  `json:"cappingMethod"`
+			CappingPercentage     float64 `json:"cappingPercentage"`
+			LockPeriodDays        int     `json:"lockPeriodDays"`
+		} `json:"lockSettings"`
+	} `json:"internalControls"`
+	LastModifiedDate   time.Time `json:"lastModifiedDate"`
+	LoanAmountSettings struct {
+		LoanAmount struct {
+			DefaultValue float64 `json:"defaultValue"`
+			EncodedKey   string  `json:"encodedKey"`
+			MaxValue     float64 `json:"maxValue"`
+			MinValue     float64 `json:"minValue"`
+		} `json:"loanAmount"`
+		TrancheSettings struct {
+			MaxNumberOfTranches int `json:"maxNumberOfTranches"`
+		} `json:"trancheSettings"`
+	} `json:"loanAmountSettings"`
+	Name               string `json:"name"`
+	NewAccountSettings struct {
+		AccountInitialState string `json:"accountInitialState"`
+		IDGeneratorType     string `json:"idGeneratorType"`
+		IDPattern           string `json:"idPattern"`
+	} `json:"newAccountSettings"`
+	Notes          string `json:"notes"`
+	OffsetSettings struct {
+		AllowOffset bool `json:"allowOffset"`
+	} `json:"offsetSettings"`
+	PaymentSettings struct {
+		AmortizationMethod              string `json:"amortizationMethod"`
+		LatePaymentsRecalculationMethod string `json:"latePaymentsRecalculationMethod"`
+		PaymentMethod                   string `json:"paymentMethod"`
+		PrepaymentSettings              struct {
+			ApplyInterestOnPrepaymentMethod string `json:"applyInterestOnPrepaymentMethod"`
+			ElementsRecalculationMethod     string `json:"elementsRecalculationMethod"`
+			FuturePaymentsAcceptance        string `json:"futurePaymentsAcceptance"`
+			PrepaymentAcceptance            string `json:"prepaymentAcceptance"`
+			PrepaymentRecalculationMethod   string `json:"prepaymentRecalculationMethod"`
+			PrincipalPaidInstallmentStatus  string `json:"principalPaidInstallmentStatus"`
+		} `json:"prepaymentSettings"`
+		PrincipalPaymentSettings struct {
+			Amount struct {
+				DefaultValue float64 `json:"defaultValue"`
+				EncodedKey   string  `json:"encodedKey"`
+				MaxValue     float64 `json:"maxValue"`
+				MinValue     float64 `json:"minValue"`
+			} `json:"amount"`
+			DefaultPrincipalRepaymentInterval int    `json:"defaultPrincipalRepaymentInterval"`
+			EncodedKey                        string `json:"encodedKey"`
+			IncludeFeesInFloorAmount          bool   `json:"includeFeesInFloorAmount"`
+			IncludeInterestInFloorAmount      bool   `json:"includeInterestInFloorAmount"`
+			Percentage                        struct {
+				DefaultValue float64 `json:"defaultValue"`
+				EncodedKey   string  `json:"encodedKey"`
+				MaxValue     float64 `json:"maxValue"`
+				MinValue     float64 `json:"minValue"`
+			} `json:"percentage"`
+			PrincipalCeilingValue  float64 `json:"principalCeilingValue"`
+			PrincipalFloorValue    float64 `json:"principalFloorValue"`
+			PrincipalPaymentMethod string  `json:"principalPaymentMethod"`
+			TotalDueAmountFloor    float64 `json:"totalDueAmountFloor"`
+			TotalDuePayment        string  `json:"totalDuePayment"`
+		} `json:"principalPaymentSettings"`
+		RepaymentAllocationOrder []string `json:"repaymentAllocationOrder"`
+	} `json:"paymentSettings"`
+	PenaltySettings struct {
+		LoanPenaltyCalculationMethod string `json:"loanPenaltyCalculationMethod"`
+		LoanPenaltyGracePeriod       int    `json:"loanPenaltyGracePeriod"`
+		PenaltyRate                  struct {
+			DefaultValue float64 `json:"defaultValue"`
+			EncodedKey   string  `json:"encodedKey"`
+			MaxValue     float64 `json:"maxValue"`
+			MinValue     float64 `json:"minValue"`
+		} `json:"penaltyRate"`
+	} `json:"penaltySettings"`
+	RedrawSettings struct {
+		AllowRedraw bool `json:"allowRedraw"`
+	} `json:"redrawSettings"`
+	ScheduleSettings struct {
+		BillingCycles struct {
+			Enabled   bool  `json:"enabled"`
+			StartDays []int `json:"startDays"`
+		} `json:"billingCycles"`
+		DefaultRepaymentPeriodCount int `json:"defaultRepaymentPeriodCount"`
+		FirstRepaymentDueDateOffset struct {
+			DefaultValue int    `json:"defaultValue"`
+			EncodedKey   string `json:"encodedKey"`
+			MaxValue     int    `json:"maxValue"`
+			MinValue     int    `json:"minValue"`
+		} `json:"firstRepaymentDueDateOffset"`
+		FixedDaysOfMonth     []int  `json:"fixedDaysOfMonth"`
+		InterestAccrualSince string `json:"interestAccrualSince"`
+		NumInstallments      struct {
+			DefaultValue int    `json:"defaultValue"`
+			EncodedKey   string `json:"encodedKey"`
+			MaxValue     int    `json:"maxValue"`
+			MinValue     int    `json:"minValue"`
+		} `json:"numInstallments"`
+		PreviewSchedule struct {
+			NumberOfPreviewedInstalments int  `json:"numberOfPreviewedInstalments"`
+			PreviewScheduleEnabled       bool `json:"previewScheduleEnabled"`
+		} `json:"previewSchedule"`
+		RepaymentMethod              string   `json:"repaymentMethod"`
+		RepaymentPeriodUnit          string   `json:"repaymentPeriodUnit"`
+		RepaymentReschedulingMethod  string   `json:"repaymentReschedulingMethod"`
+		RepaymentScheduleEditOptions []string `json:"repaymentScheduleEditOptions"`
+		RepaymentScheduleMethod      string   `json:"repaymentScheduleMethod"`
+		RoundingSettings             struct {
+			RepaymentCurrencyRounding       string `json:"repaymentCurrencyRounding"`
+			RepaymentElementsRoundingMethod string `json:"repaymentElementsRoundingMethod"`
+			RoundingRepaymentScheduleMethod string `json:"roundingRepaymentScheduleMethod"`
+		} `json:"roundingSettings"`
+		ScheduleDueDatesMethod   string `json:"scheduleDueDatesMethod"`
+		ShortMonthHandlingMethod string `json:"shortMonthHandlingMethod"`
+	} `json:"scheduleSettings"`
+	SecuritySettings struct {
+		IsCollateralEnabled bool    `json:"isCollateralEnabled"`
+		IsGuarantorsEnabled bool    `json:"isGuarantorsEnabled"`
+		RequiredGuaranties  float64 `json:"requiredGuaranties"`
+	} `json:"securitySettings"`
+	State       string `json:"state"`
+	TaxSettings struct {
+		TaxCalculationMethod   string `json:"taxCalculationMethod"`
+		TaxSourceKey           string `json:"taxSourceKey"`
+		TaxesOnFeesEnabled     bool   `json:"taxesOnFeesEnabled"`
+		TaxesOnInterestEnabled bool   `json:"taxesOnInterestEnabled"`
+		TaxesOnPenaltyEnabled  bool   `json:"taxesOnPenaltyEnabled"`
+	} `json:"taxSettings"`
+	Templates []struct {
+		CreationDate     time.Time `json:"creationDate"`
+		EncodedKey       string    `json:"encodedKey"`
+		LastModifiedDate time.Time `json:"lastModifiedDate"`
+		Name             string    `json:"name"`
+		Type             string    `json:"type"`
+	} `json:"templates"`
+	Type string `json:"type"`
 }
