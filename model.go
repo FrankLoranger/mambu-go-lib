@@ -688,7 +688,7 @@ type DocumentRequest struct {
 	Notes     string
 }
 
-type CreateDocumentResponse struct {
+type DocumentResponse struct {
 	CreationDate     time.Time `json:"creationDate"`
 	EncodedKey       string    `json:"encodedKey"`
 	FileName         string    `json:"fileName"`
