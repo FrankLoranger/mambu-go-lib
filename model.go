@@ -680,7 +680,7 @@ type LoanProductResponse struct {
 	Type string `json:"type"`
 }
 
-type DocumentRequest struct {
+type CreateDocumentRequest struct {
 	OwnerType string
 	ID        string
 	File      []byte
