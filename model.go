@@ -679,3 +679,26 @@ type LoanProductResponse struct {
 	} `json:"templates"`
 	Type string `json:"type"`
 }
+
+type DocumentRequest struct {
+	OwnerType string
+	ID        string
+	File      []byte
+	Name      string
+	Notes     string
+}
+
+type CreateDocumentResponse struct {
+	CreationDate     time.Time `json:"creationDate"`
+	EncodedKey       string    `json:"encodedKey"`
+	FileName         string    `json:"fileName"`
+	FileSize         int       `json:"fileSize"`
+	ID               int       `json:"id"`
+	LastModifiedDate time.Time `json:"lastModifiedDate"`
+	Location         string    `json:"location"`
+	Name             string    `json:"name"`
+	Notes            string    `json:"notes"`
+	OwnerKey         string    `json:"ownerKey"`
+	OwnerType        string    `json:"ownerType"`
+	Type             string    `json:"type"`
+}
